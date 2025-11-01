@@ -10,14 +10,14 @@ table = dynamodb.Table(os.environ['PEDIDOS_TABLE'])
 
 def handler(event, context):
     try:
-        body = json.loads(event['body'], parse_float=Decimal)  # <— ESTA LÍNEA es clave
+        body = json.loads(event['body'], parse_float=Decimal)
 
         item = {
             'id': str(uuid.uuid4()),
             'cliente': body.get('cliente'),
             'fecha': body.get('fecha', str(datetime.now())),
-            'productos': body.get('productos'),
-            'total': body.get('total'),
+            'productos': body.get('productos', []),
+            'total': body.get('total', Decimal("0")),
             'estado': body.get('estado', 'Creado')
         }
 
@@ -34,3 +34,4 @@ def handler(event, context):
             "statusCode": 500,
             "body": json.dumps({"message": "Internal Server Error", "error": str(e)})
         }
+
