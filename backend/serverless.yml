@@ -10,16 +10,7 @@ provider:
   httpApi:
     cors: true
   iam:
-    role:
-      statements:
-        - Effect: Allow
-          Action:
-            - dynamodb:PutItem
-            - dynamodb:GetItem
-            - dynamodb:UpdateItem
-          Resource:
-            - arn:aws:dynamodb:us-east-1:*:table/PedidosTable
-            - arn:aws:dynamodb:us-east-1:*:table/ComisionesTable
+    role: arn:aws:iam::410845202169:role/LabRole
 
 functions:
   pedidos:
@@ -60,6 +51,7 @@ functions:
       - httpApi:
           path: /api/comisiones/{distribuidor_id}/{periodo}
           method: PATCH
+
 
 
 
