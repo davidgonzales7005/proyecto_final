@@ -9,6 +9,9 @@ provider:
   stage: prod
   httpApi:
     cors: true
+  iam:
+    role: arn:aws:iam::410845202169:role/LabRole
+
 
 functions:
   pedidos:
@@ -47,6 +50,7 @@ functions:
       - httpApi:
           path: /api/comisiones/{distribuidor_id}/{periodo}
           method: PATCH
+
 
 
 
