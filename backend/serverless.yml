@@ -1,6 +1,6 @@
 service: proyecto-final-apis
 frameworkVersion: "3"
-console: false   # desactiva Serverless Console/Observability
+console: false
 
 provider:
   name: aws
@@ -10,8 +10,16 @@ provider:
   httpApi:
     cors: true
   iam:
-    role: arn:aws:iam::410845202169:role/LabRole
-
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:UpdateItem
+          Resource:
+            - arn:aws:dynamodb:us-east-1:*:table/PedidosTable
+            - arn:aws:dynamodb:us-east-1:*:table/ComisionesTable
 
 functions:
   pedidos:
@@ -31,6 +39,8 @@ functions:
 
   pagos:
     handler: handlers/pagos.handler
+    environment:
+      PEDIDOS_TABLE: PedidosTable
     events:
       - httpApi:
           path: /api/pagos
@@ -50,6 +60,8 @@ functions:
       - httpApi:
           path: /api/comisiones/{distribuidor_id}/{periodo}
           method: PATCH
+
+
 
 
 
