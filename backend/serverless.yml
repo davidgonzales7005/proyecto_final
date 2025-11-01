@@ -1,18 +1,16 @@
 service: proyecto-final-apis
-
 frameworkVersion: "3"
 
 org: utecds
-
-app: alicorp-parcial            # visible en app.serverless.com
+app: alicorp-parcial
 
 provider:
   name: aws
   runtime: python3.11
-  region: sa-east-1
+  region: us-east-1
   stage: prod
   httpApi:
-    cors: true                  # habilita CORS para el front
+    cors: true
   iam:
     role:
       statements:
@@ -22,28 +20,42 @@ provider:
             - dynamodb:GetItem
             - dynamodb:UpdateItem
           Resource:
-            - arn:aws:dynamodb:sa-east-1:*:table/PedidosTable
-            - arn:aws:dynamodb:sa-east-1:*:table/ComisionesTable
+            - arn:aws:dynamodb:us-east-1:*:table/PedidosTable
+            - arn:aws:dynamodb:us-east-1:*:table/ComisionesTable
 
 functions:
   pedidos:
     handler: handlers/pedidos.handler
     events:
-      - httpApi: { path: /api/pedidos, method: post }
-      - httpApi: { path: /api/pedidos/{id}, method: get }
-      - httpApi: { path: /api/pedidos/{id}/estado, method: patch }
+      - httpApi:
+          path: /api/pedidos
+          method: POST
+      - httpApi:
+          path: /api/pedidos/{id}
+          method: GET
+      - httpApi:
+          path: /api/pedidos/{id}/estado
+          method: PATCH
 
   pagos:
     handler: handlers/pagos.handler
     events:
-      - httpApi: { path: /api/pagos, method: post }
+      - httpApi:
+          path: /api/pagos
+          method: POST
 
   comisiones:
     handler: handlers/comisiones.handler
     events:
-      - httpApi: { path: /api/comisiones, method: post }
-      - httpApi: { path: /api/comisiones/{distribuidor_id}/{periodo}, method: get }
-      - httpApi: { path: /api/comisiones/{distribuidor_id}/{periodo}, method: patch }
+      - httpApi:
+          path: /api/comisiones
+          method: POST
+      - httpApi:
+          path: /api/comisiones/{distribuidor_id}/{periodo}
+          method: GET
+      - httpApi:
+          path: /api/comisiones/{distribuidor_id}/{periodo}
+          method: PATCH
 
 resources:
   Resources:
@@ -53,9 +65,11 @@ resources:
         TableName: PedidosTable
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
-          - { AttributeName: id, AttributeType: S }
+          - AttributeName: id
+            AttributeType: S
         KeySchema:
-          - { AttributeName: id, KeyType: HASH }
+          - AttributeName: id
+            KeyType: HASH
 
     ComisionesTable:
       Type: AWS::DynamoDB::Table
@@ -63,6 +77,8 @@ resources:
         TableName: ComisionesTable
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
-          - { AttributeName: id, AttributeType: S }
+          - AttributeName: id
+            AttributeType: S
         KeySchema:
-          - { AttributeName: id, KeyType: HASH }
+          - AttributeName: id
+            KeyType: HASH
