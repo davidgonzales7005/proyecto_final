@@ -1,5 +1,4 @@
 import json, os, uuid, boto3
-from boto3.dynamodb.conditions import Key
 
 dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table(os.environ["PEDIDOS_TABLE"])
@@ -9,7 +8,8 @@ CORS = {
     "Access-Control-Allow-Methods": "GET,POST,PATCH,OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type,Authorization"
 }
-def res(code, body): return {"statusCode": code, "headers": {"Content-Type": "application/json", **CORS}, "body": json.dumps(body)}
+def res(code, body): 
+    return {"statusCode": code, "headers": {"Content-Type":"application/json", **CORS}, "body": json.dumps(body)}
 
 def handler(event, context):
     method = event.get("requestContext", {}).get("http", {}).get("method", "")
@@ -23,6 +23,8 @@ def handler(event, context):
         item = {
             "id": body.get("id") or str(uuid.uuid4()),
             "cliente": body.get("cliente", "Alicorp"),
+            "fecha": body.get("fecha", ""),
+            "productos": body.get("productos", []),
             "total": float(body.get("total", 0)),
             "estado": body.get("estado", "Creado")
         }
@@ -31,7 +33,8 @@ def handler(event, context):
 
     if method == "GET" and "id" in path_params:
         r = table.get_item(Key={"id": path_params["id"]})
-        if "Item" not in r: return res(404, {"error": "No existe"})
+        if "Item" not in r: 
+            return res(404, {"error": "Pedido no existe"})
         return res(200, r["Item"])
 
     if method == "PATCH" and "id" in path_params:
@@ -46,5 +49,6 @@ def handler(event, context):
         return res(200, r["Attributes"])
 
     return res(400, {"error": "Ruta o método no soportado"})
+
 
 
