@@ -8,8 +8,8 @@ CORS = {
     "Access-Control-Allow-Methods": "GET,POST,PATCH,OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type,Authorization"
 }
-def res(code, body): 
-    return {"statusCode": code, "headers": {"Content-Type":"application/json", **CORS}, "body": json.dumps(body)}
+def res(code, body):
+    return {"statusCode": code, "headers": {"Content-Type": "application/json", **CORS}, "body": json.dumps(body)}
 
 def handler(event, context):
     method = event.get("requestContext", {}).get("http", {}).get("method", "")
@@ -33,7 +33,7 @@ def handler(event, context):
 
     if method == "GET" and "id" in path_params:
         r = table.get_item(Key={"id": path_params["id"]})
-        if "Item" not in r: 
+        if "Item" not in r:
             return res(404, {"error": "Pedido no existe"})
         return res(200, r["Item"])
 
@@ -49,6 +49,3 @@ def handler(event, context):
         return res(200, r["Attributes"])
 
     return res(400, {"error": "Ruta o método no soportado"})
-
-
-
