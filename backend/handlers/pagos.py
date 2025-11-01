@@ -5,7 +5,7 @@ CORS = {
     "Access-Control-Allow-Methods": "POST,OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type,Authorization"
 }
-def res(c,b): 
+def res(c, b): 
     return {"statusCode": c, "headers": {"Content-Type":"application/json", **CORS}, "body": json.dumps(b)}
 
 def handler(event, context):
@@ -13,5 +13,5 @@ def handler(event, context):
     if method == "OPTIONS":
         return {"statusCode": 204, "headers": CORS}
     data = json.loads(event.get("body") or "{}")
-    # placeholder: aquí registrarías el pago (otra tabla / integración)
+    # placeholder: persistir pago en otra tabla / servicio externo
     return res(201, {"status": "ok", "pago": data})
