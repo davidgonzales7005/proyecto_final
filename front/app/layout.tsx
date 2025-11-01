@@ -1,28 +1,20 @@
-import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
+// app/layout.tsx
 import './globals.css'
+import type { Metadata } from 'next'
+import { Inter, Roboto_Mono } from 'next/font/google'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] })
+const robotoMono = Roboto_Mono({ subsets: ['latin'], variable: '--font-mono' })
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: 'Portal Pedidos',
+  description: 'Pedidos, Pagos y Comisiones',
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`font-sans antialiased`}>
-        {children}
-        <Analytics />
-      </body>
+    <html lang="es" className={inter.className}>
+      <body className={robotoMono.variable}>{children}</body>
     </html>
   )
 }
