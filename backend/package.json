@@ -2,11 +2,10 @@
   "name": "proyecto-final-backend",
   "private": true,
   "devDependencies": {
-    "serverless": "3"
+    "serverless": "^3.40.0"
   },
   "scripts": {
-    "deploy": "serverless deploy",
-    "remove": "serverless remove",
-    "info": "serverless info"
+    "deploy": "serverless deploy --region us-east-1 --stage prod",
+    "remove": "serverless remove --region us-east-1 --stage prod"
   }
 }
