@@ -1,3 +1,4 @@
+
 service: proyecto-final-apis
 frameworkVersion: "3"
 
@@ -19,13 +20,17 @@ provider:
             - dynamodb:PutItem
             - dynamodb:GetItem
             - dynamodb:UpdateItem
+            - dynamodb:Query
           Resource:
             - arn:aws:dynamodb:us-east-1:*:table/PedidosTable
             - arn:aws:dynamodb:us-east-1:*:table/ComisionesTable
+            - arn:aws:dynamodb:us-east-1:*:table/ComisionesTable/index/*
 
 functions:
   pedidos:
     handler: handlers/pedidos.handler
+    environment:
+      PEDIDOS_TABLE: PedidosTable
     events:
       - httpApi:
           path: /api/pedidos
@@ -46,6 +51,8 @@ functions:
 
   comisiones:
     handler: handlers/comisiones.handler
+    environment:
+      COMISIONES_TABLE: ComisionesTable
     events:
       - httpApi:
           path: /api/comisiones
@@ -77,8 +84,12 @@ resources:
         TableName: ComisionesTable
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
-          - AttributeName: id
+          - AttributeName: distribuidor_id
+            AttributeType: S
+          - AttributeName: periodo
             AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: distribuidor_id
             KeyType: HASH
+          - AttributeName: periodo
+            KeyType: RANGE
