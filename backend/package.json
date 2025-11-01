@@ -1,0 +1,12 @@
+{
+  "name": "proyecto-final-backend",
+  "private": true,
+  "devDependencies": {
+    "serverless": "3"
+  },
+  "scripts": {
+    "deploy": "serverless deploy",
+    "remove": "serverless remove",
+    "info": "serverless info"
+  }
+}

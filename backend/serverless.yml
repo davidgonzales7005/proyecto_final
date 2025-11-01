@@ -1,0 +1,68 @@
+service: proyecto-final-apis
+
+frameworkVersion: "3"
+
+org: utecds
+
+app: alicorp-parcial            # visible en app.serverless.com
+
+provider:
+  name: aws
+  runtime: python3.11
+  region: sa-east-1
+  stage: prod
+  httpApi:
+    cors: true                  # habilita CORS para el front
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:UpdateItem
+          Resource:
+            - arn:aws:dynamodb:sa-east-1:*:table/PedidosTable
+            - arn:aws:dynamodb:sa-east-1:*:table/ComisionesTable
+
+functions:
+  pedidos:
+    handler: handlers/pedidos.handler
+    events:
+      - httpApi: { path: /api/pedidos, method: post }
+      - httpApi: { path: /api/pedidos/{id}, method: get }
+      - httpApi: { path: /api/pedidos/{id}/estado, method: patch }
+
+  pagos:
+    handler: handlers/pagos.handler
+    events:
+      - httpApi: { path: /api/pagos, method: post }
+
+  comisiones:
+    handler: handlers/comisiones.handler
+    events:
+      - httpApi: { path: /api/comisiones, method: post }
+      - httpApi: { path: /api/comisiones/{distribuidor_id}/{periodo}, method: get }
+      - httpApi: { path: /api/comisiones/{distribuidor_id}/{periodo}, method: patch }
+
+resources:
+  Resources:
+    PedidosTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: PedidosTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - { AttributeName: id, AttributeType: S }
+        KeySchema:
+          - { AttributeName: id, KeyType: HASH }
+
+    ComisionesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ComisionesTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - { AttributeName: id, AttributeType: S }
+        KeySchema:
+          - { AttributeName: id, KeyType: HASH }
